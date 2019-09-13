@@ -1,4 +1,4 @@
-output "subnet_ids" {
+output "ids" {
   value = "${aws_subnet.subnet.*.id}"
 }
 

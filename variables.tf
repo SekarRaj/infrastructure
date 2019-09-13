@@ -29,3 +29,14 @@ variable "private_subnet_cidrs" {
   type        = "list"
   description = "Private subnet CIDR blocks"
 }
+
+# bastion
+variable "bastion_instance_type" {
+  type        = "string"
+  description = "Instance type for bastion host. e.g t2.mirco"
+}
+
+variable "bastion_ami_id" {
+  type        = "string"
+  description = "AMI id for the bastion host"
+}

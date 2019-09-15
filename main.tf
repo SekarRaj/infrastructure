@@ -24,4 +24,15 @@ module "bastion" {
   vpc_id            = "${module.network.vpc_id}"
 }
 
-# module 
+module "devops" {
+  source = "./modules/devops"
+
+  name               = "jenkins"
+  environment        = "${var.environment}"
+  image              = "${var.bastion_ami_id}"
+  key_name           = "${aws_key_pair.aws_admin.key_name}"
+  instance_type      = "${var.bastion_instance_type}"
+  private_subnet_ids = "${module.network.private_subnet_ids}"
+  public_subnet_ids  = "${module.network.public_subnet_ids}"
+  vpc_id             = "${module.network.vpc_id}"
+}

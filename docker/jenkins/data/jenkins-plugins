@@ -1,0 +1,10 @@
+git
+mstest
+workflow-aggregator
+credentials-binding
+docker-plugin
+pipeline-utility-steps
+sonar-quality-gates
+sonar
+cucumber-testresult-plugin
+quality-gates

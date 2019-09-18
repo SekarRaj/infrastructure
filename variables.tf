@@ -40,3 +40,9 @@ variable "bastion_ami_id" {
   type        = "string"
   description = "AMI id for the bastion host"
 }
+
+#jenkins
+variable "jenkins_ami_id" {
+  type = "string"
+  description = "Custom built jenkins image"
+}

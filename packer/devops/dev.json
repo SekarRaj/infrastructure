@@ -1,0 +1,7 @@
+{
+   "variables":{
+      "aws_access_key":"{{env `AWS_ACCESS_KEY_ID`}}",
+      "aws_secret_key":"{{env `AWS_SECRET_ACCESS_KEY`}}",
+      "destination_regions": "ap-south-1a, ap-south-1b, ap-south-1c"
+   }
+}

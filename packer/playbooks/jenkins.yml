@@ -1,0 +1,8 @@
+- hosts: localhost
+  gather_facts: yes
+  roles:
+    - java
+    - jenkins
+  tags:
+    - java
+    - jenkins

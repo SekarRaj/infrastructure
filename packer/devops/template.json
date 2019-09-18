@@ -1,0 +1,21 @@
+{
+   "builders":[
+      {
+         "type":"amazon-ebs",
+         "access_key":"{{user `aws_access_key`}}",
+         "secret_key":"{{user `aws_secret_key`}}",
+         "region":"{{user `destination_regions`}}",
+         "source_ami":"ami-009110a2bf8d7dd0a",
+         "ami_name":"devops-master {{timestamp}}",
+         "instance_type":"t2.micro",
+         "ssh_username":"ubuntu",
+         "ami_description":"Devops standalone docker edition"
+      }
+   ],
+   "provisioners":[
+      {
+         "type":"shell",
+         "scripts": "./scripts/provision.sh"
+      }
+   ]
+}

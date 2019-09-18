@@ -1,5 +1,5 @@
 resource "aws_security_group" "alb_sec_group" {
-  name        = "${var.environment}_devops_sec_group"
+  name        = "${var.name}_devops_sec_group"
   description = "Used in ${var.environment}"
   vpc_id      = "${var.vpc_id}"
 
@@ -19,7 +19,7 @@ resource "aws_security_group" "alb_sec_group" {
 }
 
 resource "aws_launch_configuration" "launch_config" {
-  name          = "${var.environment}_launch_config"
+  name          = "${var.name}_launch_config"
   key_name      = "${var.key_name}"
   image_id      = "${var.image}"
   instance_type = "${var.instance_type}"
@@ -27,10 +27,20 @@ resource "aws_launch_configuration" "launch_config" {
   lifecycle {
     create_before_destroy = true
   }
+#   provisioner "local-exec" {
+#     command = <<EOT
+# sleep 30;
+# >jenkins.ini;
+# echo "[jenkins-ci]" | tee -a jenkins-ci.ini;
+# echo "localhost ansible_user=${var.ansible_user} ansible_ssh_private_key_file=${var.private_key}" | tee -a jenkins.ini;
+# export ANSIBLE_HOST_KEY_CHECKING=False;
+# ansible-playbook -u ${var.ansible_user} --private-key ${var.private_key} -i jenkins.ini ../../playbooks/jenkins.yml
+#     EOT
+#   }
 }
 
 resource "aws_lb" "alb" {
-  name               = "${var.environment}-${var.name}-alb"
+  name               = "${var.name}-alb"
   internal           = false
   load_balancer_type = "application"
   security_groups    = ["${aws_security_group.alb_sec_group.id}"]
@@ -42,9 +52,9 @@ resource "aws_lb" "alb" {
 }
 
 resource "aws_lb_target_group" "alb_target_group" {
-  name = "alb-target-group"
+  name = "${var.name}-alb-target-group"
 
-  port     = 80
+  port     = 8080
   protocol = "HTTP"
   vpc_id   = "${var.vpc_id}"
 
@@ -64,22 +74,21 @@ resource "aws_lb_target_group" "alb_target_group" {
     timeout             = 5
     interval            = 10
     path                = "/"
-    port                = 80
+    port                = 8080
   }
 }
 
 resource "aws_autoscaling_group" "autoscale_group" {
+  name = "${var.name}"
   launch_configuration = "${aws_launch_configuration.launch_config.id}"
   vpc_zone_identifier  = "${var.private_subnet_ids}"
-  # load_balancers       = ["${aws_lb.alb.name}"]
 
-  # target_group_arns = ["${aws_alb_target_group.alb_target_group.arn}"]
-  min_size          = 3
-  max_size          = 3
+  min_size = 1
+  max_size = 2
 
   tag {
     key                 = "Name"
-    value               = "autoscale"
+    value               = "${var.environment}_${var.name}_autoscale_group"
     propagate_at_launch = true
   }
 }
@@ -91,7 +100,7 @@ resource "aws_autoscaling_attachment" "alb_autoscale" {
 
 resource "aws_lb_listener" "aws_lb_listener" {
   load_balancer_arn = "${aws_lb.alb.arn}"
-  port              = 80
+  port              = 8080
   protocol          = "HTTP"
 
   default_action {

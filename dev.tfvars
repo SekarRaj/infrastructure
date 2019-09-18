@@ -14,3 +14,7 @@ private_subnet_cidrs = ["10.0.11.0/24", "10.0.12.0/24", "10.0.13.0/24"]
 bastion_instance_type = "t2.micro"
 
 bastion_ami_id = "ami-0cb0e70f44e1a4bb5"
+
+
+# devops - Ubuntu based AMI
+jenkins_ami_id = "ami-09bb95ded6bbacc25"

@@ -1,0 +1,14 @@
+- name: Update all packages (Including kernel)
+  yum:
+    name: '*'
+    state: latest
+    use_backend: yum
+  become: yes
+
+- name: Install java
+  yum:
+    name:
+      - java-1.8.0-openjdk
+    state: present
+    # use_backend: yum
+  become: yes

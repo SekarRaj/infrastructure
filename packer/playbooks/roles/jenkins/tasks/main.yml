@@ -1,0 +1,13 @@
+---
+- name: Install Jenkins
+  yum:
+    name:
+      - jenkins
+    state: present
+  become: yes
+
+- name: Start Jenkins
+  systemd:
+    name: jenkins
+    state: started
+    enabled: yes
